@@ -1,5 +1,5 @@
 #LNMP环境安装</br>
-源码编译安装 LNMP 环境虽然便于自定义，但是对于小型服务器来说，漫长的编译时间让人无法等待。如果能在 10 分钟内搞定环境安装，那就很好了。</br>
+源码编译安装 LNMP 环境虽然便于自定义，但是对于小型服务器来说，漫长的编译时间让人无法等待。如果能在 10 分钟内搞定环境安装，那就很好了。</br></br>
 1、配置yum源</br>
 CentOS 7 的 默认 yum 源里的软件包版本可能不是最新的，如果要安装最新的软件包就得配置下 yum 源。</br>
 配置 yum 源可以通过直接安装 rpm (Red Hat Package Manager) 包，或者修改 Repository，本文讲解通过安装 rpm 方式。</br>
@@ -27,7 +27,7 @@ http://nginx.org/en/linux_packages.html</br>
 [root@localhost ~]# rpm --import http://nginx.org/packages/keys/nginx_signing.key</br>
 安装 Nginx rpm 包</br>
 [root@localhost ~]# rpm -Uvh http://nginx.org/packages/centos/7/noarch/rpmS/nginx-release-centos-7-0.el7.ngx.noarch.rpm</br>
-到目前为止，yum 源已经安装好了 ，接着进行下一步的配置。</br>
+到目前为止，yum 源已经安装好了 ，接着进行下一步的配置。</br></br>
 2、修改相关的yum源文件</br>
 MySQL yum 源默认是启用的 MySQL-5.6，PHP yum 源默认都没有启用，Nginx yum 源默认是启用的 Nginx-1.8。定位到 /etc/yum.repos.d/，对后缀为 .repo 的文件进行编辑，修改 enabled 为 1 以启用。</br>
 2.1、启用 PHP-7.0的yum源</br>
@@ -38,11 +38,11 @@ MySQL yum 源默认是启用的 MySQL-5.6，PHP yum 源默认都没有启用，N
 [root@localhost ~]# sed -i "/php70\/mirror/{n;s/enabled=0/enabled=1/g}" /etc/yum.repos.d/remi-php70.repo</br>
 到这一步 yum 配置就算完成了，清除并生成 yum缓存使之生效：</br>
 [root@localhost ~]# yum clean all</br>
-[root@localhost ~]# yum makecache</br>
+[root@localhost ~]# yum makecache</br></br>
 3、安装 MySQL + PHP + Nginx + phpMyAdmin</br>
 yum 源已经配置好了，现在直接安装 MySQL + PHP + Nginx + phpMyAdmin</br>
 [root@localhost ~]# yum install -y mysql-community-server nginx php php-bcmath php-fpm php-gd php-json php-mbstring php-mcrypt php-mysqlnd php-opcache php-pdo php-pdo_dblib php-pgsql php-recode php-snmp php-soap php-xml php-pecl-zip phpMyAdmin</br>
-注：上面安装的 php-* 可以根据实际使用情况选择安装</br>
+注：上面安装的 php-* 可以根据实际使用情况选择安装</br></br>
 4、修改MySQL + PHP + Nginx + phpMyAdmin的配置文件</br>
 安装完成后，进行下一步的环境配置。</br>
 MySQL 配置文件在 /etc/my.cnf.d/</br>
@@ -152,7 +152,7 @@ $cfg['SaveDir'] = '/tmp';</br>
 [root@localhost ~]# cp -a /usr/share/phpMyAdmin /home/wwwroot/default/</br>
 替换连接形式为目录</br>
 [root@localhost ~]# rm -rf /home/wwwroot/default/phpMyAdmin/doc/html</br>
-[root@localhost ~]# cp -a /usr/share/doc/phpMyAdmin-<span>*</span>/html /home/wwwroot/default/phpMyAdmin/doc/</br>
+[root@localhost ~]# cp -a /usr/share/doc/phpMyAdmin-<span>*</span>/html /home/wwwroot/default/phpMyAdmin/doc/</br></br>
 5、一键脚本
 上面已经讲解了如何配置和安装，但是不能每次都这么一步一步来吧？为了节省时间，写了一个一键安装管理脚本，可选择安装 Nginx 1.8/1.9、 MySQL 5.5/5.6/5.7 和 PHP 5.5/5.6/7.0</br>
 安装</br>
