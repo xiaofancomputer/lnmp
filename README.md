@@ -1,7 +1,7 @@
-# lnmp
-lnmp安装
+#lnmp安装
 
 源码编译安装 LNMP 环境虽然便于自定义，但是对于小型服务器来说，漫长的编译时间让人无法等待。如果能在 10 分钟内搞定环境安装，那就很好了。
+
 1、配置yum源
 CentOS 7 的 默认 yum 源里的软件包版本可能不是最新的，如果要安装最新的软件包就得配置下 yum 源。
 配置 yum 源可以通过直接安装 rpm (Red Hat Package Manager) 包，或者修改 Repository，本文讲解通过安装 rpm 方式。
