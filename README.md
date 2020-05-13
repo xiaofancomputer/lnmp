@@ -9,23 +9,36 @@
   配置 yum 源可以通过直接安装 rpm (Red Hat Package Manager) 包，或者修改 Repository，本文讲解通过安装 rpm 方式。
 
   1.1、安装epel源
+  
     首先需要安装 EPEL ( Extra Packages for Enterprise Linux ) yum 源，用以解决部分依赖包不存在的问题[root@localhost ~]# yum -y install epel-     release
 
   1.2、安装MySQL源
+  
     官方安装MySQL源参考网址
+    
     https://dev.mysql.com/doc/mysql-repo-excerpt/5.6/en/linux-installation-yum-repo.html
+    
     安装 rpm 包前需要导入 rpm-GPG-KEY 文件，不然安装过程会出错。将 MySQL rpm-GPG-KEY 另存为 mysql_pubkey.asc 并导入
     [root@localhost ~]# rpm --import mysql_pubkey.asc
     导入后安装 CentOS 7 的 MySQL rpm 包
+    
     [root@localhost ~]# rpm -Uvh http://repo.mysql.com/mysql-community-release-el7-5.noarch.rpm
   1.3、安装PHP源
+  
     PHP 最新的 rpm 官方yum源包地址
+    
     http://rpms.remirepo.net/
+    
     导入 PHP rpm-GPG-KEY (remi)
+    
     [root@localhost ~]# rpm --import http://rpms.remirepo.net/rpm-GPG-KEY-remi
+    
     安装 PHP rpm (remi) 包
+    
     [root@localhost ~]# rpm -Uvh http://remi.mirrors.arminco.com/enterprise/remi-release-7.rpm
+    
   1.4、安装 Nginx 源
+  
     官方安装Nginx源参考网址
     http://nginx.org/en/linux_packages.html
     导入 Nginx rpm-GPG-KEY
