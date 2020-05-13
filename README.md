@@ -1,123 +1,64 @@
-#lnmp安装
-
 源码编译安装 LNMP 环境虽然便于自定义，但是对于小型服务器来说，漫长的编译时间让人无法等待。如果能在 10 分钟内搞定环境安装，那就很好了。
-
 1、配置yum源
-
-  CentOS 7 的 默认 yum 源里的软件包版本可能不是最新的，如果要安装最新的软件包就得配置下 yum 源。
-
-  配置 yum 源可以通过直接安装 rpm (Red Hat Package Manager) 包，或者修改 Repository，本文讲解通过安装 rpm 方式。
-
-  1.1、安装epel源
-  
-    首先需要安装 EPEL ( Extra Packages for Enterprise Linux ) yum 源，用以解决部分依赖包不存在的问题[root@localhost ~]# yum -y install epel-     release
-
-  1.2、安装MySQL源
-  
-    官方安装MySQL源参考网址
-    
-    https://dev.mysql.com/doc/mysql-repo-excerpt/5.6/en/linux-installation-yum-repo.html
-    
-    安装 rpm 包前需要导入 rpm-GPG-KEY 文件，不然安装过程会出错。将 MySQL rpm-GPG-KEY 另存为 mysql_pubkey.asc 并导入
-    [root@localhost ~]# rpm --import mysql_pubkey.asc
-    导入后安装 CentOS 7 的 MySQL rpm 包
-    
-    [root@localhost ~]# rpm -Uvh http://repo.mysql.com/mysql-community-release-el7-5.noarch.rpm
-  1.3、安装PHP源
-  
-    PHP 最新的 rpm 官方yum源包地址
-    
-    http://rpms.remirepo.net/
-    
-    导入 PHP rpm-GPG-KEY (remi)
-    
-    [root@localhost ~]# rpm --import http://rpms.remirepo.net/rpm-GPG-KEY-remi
-    
-    安装 PHP rpm (remi) 包
-    
-    [root@localhost ~]# rpm -Uvh http://remi.mirrors.arminco.com/enterprise/remi-release-7.rpm
-    
-  1.4、安装 Nginx 源
-  
-    官方安装Nginx源参考网址
-    
-    http://nginx.org/en/linux_packages.html
-    
-    导入 Nginx rpm-GPG-KEY
-    
-    [root@localhost ~]# rpm --import http://nginx.org/packages/keys/nginx_signing.key
-    
-    安装 Nginx rpm 包
-    
-    [root@localhost ~]# rpm -Uvh http://nginx.org/packages/centos/7/noarch/rpmS/nginx-release-centos-7-0.el7.ngx.noarch.rpm
-    
-    到目前为止，yum 源已经安装好了 ，接着进行下一步的配置。
-    
-    
+CentOS 7 的 默认 yum 源里的软件包版本可能不是最新的，如果要安装最新的软件包就得配置下 yum 源。
+配置 yum 源可以通过直接安装 rpm (Red Hat Package Manager) 包，或者修改 Repository，本文讲解通过安装 rpm 方式。
+1.1、安装epel源
+首先需要安装 EPEL ( Extra Packages for Enterprise Linux ) yum 源，用以解决部分依赖包不存在的问题
+[root@localhost ~]# yum -y install epel-release
+1.2、安装MySQL源
+官方安装MySQL源参考网址
+https://dev.mysql.com/doc/mysql-repo-excerpt/5.6/en/linux-installation-yum-repo.html
+安装 rpm 包前需要导入 rpm-GPG-KEY 文件，不然安装过程会出错。将 MySQL rpm-GPG-KEY 另存为 mysql_pubkey.asc 并导入
+[root@localhost ~]# rpm --import mysql_pubkey.asc
+导入后安装 CentOS 7 的 MySQL rpm 包
+[root@localhost ~]# rpm -Uvh http://repo.mysql.com/mysql-community-release-el7-5.noarch.rpm
+1.3、安装PHP源
+PHP 最新的 rpm 官方yum源包地址
+http://rpms.remirepo.net/
+导入 PHP rpm-GPG-KEY (remi)
+[root@localhost ~]# rpm --import http://rpms.remirepo.net/rpm-GPG-KEY-remi
+安装 PHP rpm (remi) 包
+[root@localhost ~]# rpm -Uvh http://remi.mirrors.arminco.com/enterprise/remi-release-7.rpm
+1.4、安装 Nginx 源
+官方安装Nginx源参考网址
+http://nginx.org/en/linux_packages.html
+导入 Nginx rpm-GPG-KEY
+[root@localhost ~]# rpm --import http://nginx.org/packages/keys/nginx_signing.key
+安装 Nginx rpm 包
+[root@localhost ~]# rpm -Uvh http://nginx.org/packages/centos/7/noarch/rpmS/nginx-release-centos-7-0.el7.ngx.noarch.rpm
+到目前为止，yum 源已经安装好了 ，接着进行下一步的配置。
 2、修改相关的yum源文件
-
-  MySQL yum 源默认是启用的 MySQL-5.6，PHP yum 源默认都没有启用，Nginx yum 源默认是启用的 Nginx-1.8。定位到 /etc/yum.repos.d/，对后缀为 .repo     的文件进行编辑，修改 enabled 为 1 以启用。
-  
-  2.1、启用 PHP-7.0的yum源
-  
-    2.1.1、修改 /etc/yum.repos.d/remi.repo，将 [remi] 和 [remi-test] 下面的 enabled=0 改为 enabled=1；
-    
-    2.1.2、修改 /etc/yum.repos.d/remi-php70.repo，将 [remi-php70] 下面的 enabled=0 改为 enabled=1；
-    
-      [root@localhost ~]# sed -i "/remi\/mirror/{n;s/enabled=0/enabled=1/g}" /etc/yum.repos.d/remi.repo
-      
-      [root@localhost ~]# sed -i "/test\/mirror/{n;n;s/enabled=0/enabled=1/g}" /etc/yum.repos.d/remi.repo
-      
-      [root@localhost ~]# sed -i "/php70\/mirror/{n;s/enabled=0/enabled=1/g}" /etc/yum.repos.d/remi-php70.repo
-      
-      到这一步 yum 配置就算完成了，清除并生成 yum缓存使之生效：
-      
-      [root@localhost ~]# yum clean all
-      
-      [root@localhost ~]# yum makecache
-      
+MySQL yum 源默认是启用的 MySQL-5.6，PHP yum 源默认都没有启用，Nginx yum 源默认是启用的 Nginx-1.8。定位到 /etc/yum.repos.d/，对后缀为 .repo 的文件进行编辑，修改 enabled 为 1 以启用。
+2.1、启用 PHP-7.0的yum源
+1、修改 /etc/yum.repos.d/remi.repo，将 [remi] 和 [remi-test] 下面的 enabled=0 改为 enabled=1；
+2、修改 /etc/yum.repos.d/remi-php70.repo，将 [remi-php70] 下面的 enabled=0 改为 enabled=1；
+[root@localhost ~]# sed -i "/remi\/mirror/{n;s/enabled=0/enabled=1/g}" /etc/yum.repos.d/remi.repo
+[root@localhost ~]# sed -i "/test\/mirror/{n;n;s/enabled=0/enabled=1/g}" /etc/yum.repos.d/remi.repo
+[root@localhost ~]# sed -i "/php70\/mirror/{n;s/enabled=0/enabled=1/g}" /etc/yum.repos.d/remi-php70.repo
+到这一步 yum 配置就算完成了，清除并生成 yum缓存使之生效：
+[root@localhost ~]# yum clean all
+[root@localhost ~]# yum makecache
 3、安装 MySQL + PHP + Nginx + phpMyAdmin
-
 yum 源已经配置好了，现在直接安装 MySQL + PHP + Nginx + phpMyAdmin
-
 [root@localhost ~]# yum install -y mysql-community-server nginx php php-bcmath php-fpm php-gd php-json php-mbstring php-mcrypt php-mysqlnd php-opcache php-pdo php-pdo_dblib php-pgsql php-recode php-snmp php-soap php-xml php-pecl-zip phpMyAdmin
-
 注：上面安装的 php-* 可以根据实际使用情况选择安装
-
 4、修改MySQL + PHP + Nginx + phpMyAdmin的配置文件
-
 安装完成后，进行下一步的环境配置。
-
 MySQL 配置文件在 /etc/my.cnf.d/
-
 PHP 配置文件在 /etc/php-fpm.d/
-
 Nginx 配置文件在 /etc/nginx/
-
 phpMyAdmin 的配置文件在 /etc/phpMyAdmin/
-
 4.1、配置 MySQL
-
 MySQL 配置文件保持默认，运行一次安全配置即可。
-
 4.1.1、启动 MySQL
-
 [root@localhost ~]# systemctl start mysqld.service
-
 4.1.2、安全配置 MySQL
-
 设置 root 密码、删除匿名用户、禁止 root 远程登录、删除 test 数据库、重新加载权限表，一路 Y 下去
-
 [root@localhost ~]# mysql_secure_installation
-
 4.2、配置 PHP
-
 PHP 默认配置文件使用的是监听 9000 端口进行通信，针对小型单一、没有做负载均衡的服务器，可以使用 unix sock 方式通信。使用 unix sock 方式需要修改 PHP 配置文件。
-
 #更换监听方式
-
 listen = /dev/shm/php-fpm-default.sock
-
 #监听队列最大长度为不限
 listen.backlog = -1
 #指定监听用户和用户组（需存在）
